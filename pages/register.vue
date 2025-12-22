@@ -65,8 +65,6 @@ const password = ref("");
 
 async function submit() {
   try {
-    console.log("email- " + email.value);
-
     const response = await $fetch("/api/user", {
       method: "POST",
       body: {
@@ -74,6 +72,14 @@ async function submit() {
         password: password.value,
       },
     });
+
+    Swal.fire({
+      title: 'Success!',
+      text: 'Account created successfully',
+      icon: 'success',
+      confirmButtonText: 'Close',
+    })
+
   } catch (error) {
     console.log("Error:");
     console.log(error.response?._data?.message);
