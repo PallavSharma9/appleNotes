@@ -3,18 +3,18 @@ export default defineNuxtRouteMiddleware(async (event) => {
 
   const { $verifyJwtToken } = useNuxtApp();
 
-  console.log("middleware fired");
+  // console.log("middleware fired");
   const jwt = useCookie("NoteNestJWT");
-  console.log(jwt.value);
+  // console.log(jwt.value);
 
   if (!jwt.value) {
     return navigateTo("/register");
   }
 
   try {
-    await $verfiyJwtToken(jwt.value, process.env.JWT_SECRET);
+    await $verifyJwtToken(jwt.value, process.env.JWT_SECRET);
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return navigateTo("/register");
   }
 });
