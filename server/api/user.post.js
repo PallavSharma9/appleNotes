@@ -1,9 +1,13 @@
 // /api/user POST
 
+// Generate secret
+// node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+
 import prisma from "~/server/db/prisma";
 import { readBody, defineEventHandler } from "h3";
 import bcrypt from "bcryptjs";
 import validator from "validator";
+import jwt from "jsonwebtoken";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -34,13 +38,18 @@ export default defineEventHandler(async (event) => {
     const salt = await bcrypt.genSalt(10);
     const passwordhash = await bcrypt.hash(body.password, salt);
 
-    await prisma.user.create({
+    const user = await prisma.user.create({
       data: {
         email: body.email,
         password: passwordhash,
         salt: salt,
       },
     });
+
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
+
+    setCookie(event, "NoteNestJWT", token);
+
     return {
       data: "success",
     };

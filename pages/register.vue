@@ -73,13 +73,16 @@ async function submit() {
       },
     });
 
-    Swal.fire({
-      title: 'Success!',
-      text: 'Account created successfully',
-      icon: 'success',
-      confirmButtonText: 'Close',
-    })
+    const { isConfirmed } = await Swal.fire({
+      title: "Success!",
+      text: "Account created successfully",
+      icon: "success",
+      confirmButtonText: "Close",
+    });
 
+    if (isConfirmed) {
+      navigateTo("/");
+    }
   } catch (error) {
     console.log("Error:");
     console.log(error.response?._data?.message);
