@@ -54,9 +54,15 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
 
-    setCookie(event, "NoteNestJWT", token);
+    setCookie(event, "NoteNestJWT", token, {
+      httpOnly: true,
+      sameSite: "lax",
+      path: "/",
+    });
 
     return {
       data: "success",
